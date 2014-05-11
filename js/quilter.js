@@ -53,21 +53,21 @@ cellClicked = function(that) {
   if(x !== -1 && y !== -1) {
     clearCell(findCell(x,y));
   }
-  x = $(that).data("x");
-  y = $(that).data("y");
-  setCell();
-  highlightCell(findCell(x, y));
+  var cell = $(that);
+  x = cell.data("x");
+  y = cell.data("y");
+  setCell(cell);
 }
 
 highlightCell = function(cell) {
   cell.css('border', '2px solid red');
 }
 
-setCell = function() {
-  var cell = findCell(x,y);
+setCell = function(cell) {
   var color_id = findByColor(getColor());
   colorCell(cell, colors[color_id]);
   cell.data('cid', color_id);
+  highlightCell(cell);
 }
 
 colorCell = function(cell, color) {
@@ -164,8 +164,6 @@ showResults = function(results) {
     } else {
       name = colors[id].name;
     }
-    console.log(name);
-    console.log(results[result]);
     resultString = resultString + name + ": " + results[result] + " ";
   }
   return resultString;
