@@ -1,7 +1,7 @@
 // ------------- initialization -------------------
 jQuery(function(){
   loadHandlebars();
-  loadColors();
+  loadSquares();
   x = -1;
   y = -1;
 
@@ -12,7 +12,7 @@ jQuery(function(){
 loadHandlebars = function() {
   tableTemplate = Handlebars.compile($("#table").html());
   cellTemplate = Handlebars.compile($("#cell").html());
-  colorTemplate = Handlebars.compile($("#colorTemplate").html());
+  squareTempate = Handlebars.compile($("#squareTempate").html());
 
   Handlebars.registerHelper('table', function(x,y,  options) {
     var out = "<table>";
@@ -28,11 +28,6 @@ loadHandlebars = function() {
 }
 
 registerListeners = function() {
-  $("#color-select").change(function(){
-    color = getColor();
-    setCell();
-  });
-
   $("body").click(function(e) {
     var target = $(e.target);
     if(!$("#table-container").has(target).length) {
@@ -40,7 +35,6 @@ registerListeners = function() {
       x = -1;
       y = -1;
     }});
-
 }
 
 // ------------- cells -------------------
@@ -64,67 +58,67 @@ highlightCell = function(cell) {
 }
 
 setCell = function(cell) {
-  var color_id = findByColor(getColor());
-  colorCell(cell, colors[color_id]);
-  cell.data('cid', color_id);
+  var square_id = findIdByColor(getColor());
+  colorCell(cell, squares[square_id]);
+  cell.data('sid', square_id);
   highlightCell(cell);
 }
 
-colorCell = function(cell, color) {
-  cell.css('background-color', color.color);
+colorCell = function(cell, square) {
+  cell.css('background-color', square.color);
 }
 
 findCell = function(x,y) {
   return $("#table-container").find("[data-x='" + x + "'][data-y='" + y + "']");
 }
 
-// ------------- colors -------------------
+// ------------- squares -------------------
 
 getColor = function() {
-  return $("input[name=color]:checked", "#color-form").val();
+  return $("input[name=color]:checked", "#square-form").val();
 }
 
-findByColor = function(colorString) {
-  for(var i = 0; i < colors.length; i++) {
-    if(colors[i].color === colorString){
+findIdByColor = function(colorString) {
+  for(var i = 0; i < squares.length; i++) {
+    if(squares[i].color === colorString){
       return i;
     }
   }
   return -1;
 }
 
-addColor = function() {
-  var _color = makeColor()
-  colors.push(_color);
-  addColorToSelect(_color);
-  if(color === -1){
-    color = _color
+addSquare = function() {
+  var _square = makeSquare()
+  squares.push(_square);
+  addColorToSelect(_square);
+  if(currentColor === -1){
+    currentColor = _square
   }
-  localStorage['quilter.colors'] = JSON.stringify(colors);
+  localStorage['quilter.squares'] = JSON.stringify(squares);
 }
 
-makeColor = function() {
-  var name = $("#color-name").val();
-  var color = $("#color-val").val();
+makeSquare = function() {
+  var name = $("#square-name").val();
+  var color = $("#square-color").val();
   return { 'color' : color, 'name': name }
 }
 
-loadColors = function() {
-  var savedColors = localStorage['quilter.colors'];
-  if(typeof savedColors !== 'undefined'){
-    colors = JSON.parse(savedColors);
-    for( c in colors ) {
-      addColorToSelect(colors[c]);
+loadSquares = function() {
+  var savedSquares = localStorage['quilter.squares'];
+  if(typeof savedSquares !== 'undefined'){
+    squares = JSON.parse(savedSquares);
+    for( s in squares ) {
+      addColorToSelect(squares[s]);
     }
-    color = colors[0];
+    currentColor = squares[0];
   } else {
-    colors = [];
-    color = -1;
+    squares = [];
+    currentColor = -1;
   }
 }
 
-addColorToSelect = function(_color) {
-  $("#color-form").append(colorTemplate({color: _color.color, name: _color.name}));
+addColorToSelect = function(square) {
+  $("#square-form").append(squareTempate({color: square.color, name: square.name}));
 }
 
 // ------------- table -------------------
@@ -144,11 +138,11 @@ makeTable = function(xsize, ysize) {
 countCells = function() {
   var results = {}
   $("#table-container td").each(function(index, elm){
-    var cid = $(elm).data("cid");
-    if(results[cid]){
-      results[cid] = results[cid] + 1;
+    var sid = $(elm).data("sid");
+    if(results[sid]){
+      results[sid] = results[sid] + 1;
     } else {
-      results[cid] = 1;
+      results[sid] = 1;
     }
   });
   $("#stats").html(showResults(results));
@@ -162,7 +156,7 @@ showResults = function(results) {
     if(id === -1) {
       name = "unset";
     } else {
-      name = colors[id].name;
+      name = squares[id].name;
     }
     resultString = resultString + name + ": " + results[result] + " ";
   }

@@ -20,10 +20,10 @@
       <div id="cell-info" class="col-md-6">
         <div class="panel panel-default">
           <div class="panel-heading">
-            <h3 class="panel-title">Selected Color</h3>
+            <h3 class="panel-title">Selected Square</h3>
           </div>
           <div class="panel-body">
-            <form action="#" id='color-form'>
+            <form action="#" id='square-form'>
             </form>
           </div>
         </div>
@@ -31,18 +31,18 @@
       <div id="cell-stuff" class="col-md-6">
         <div class="panel panel-default">
           <div class="panel-heading">
-            <h3 class="panel-title">Add Colors</h3>
+            <h3 class="panel-title">Add Squares</h3>
           </div>
           <div class="panel-body">
             <form action="#" class="form-inline" role="form">
               <div class="form-group">
-                <input type="text" id="color-name" class="form-control" placeholder="name">
+                <input type="text" id="square-name" class="form-control" placeholder="name">
               </div>
               <div class="form-group">
-                <input type="color" id="color-val" class="form-control">
+                <input type="color" id="square-color" class="form-control">
               </div>
               <div class="form-group">
-                <button class="btn btn-sm btn-default" type="button" onclick='addColor()'>Add Color</button>
+                <button class="btn btn-sm btn-default" type="button" onclick='addSquare()'>Add</button>
               </div>
             </form>
         </div>
@@ -93,11 +93,11 @@
     {{#table x y}}{{/table}}
   </script>
   <script id="cell" type="text/x-handlebars-template">
-    <td onclick='cellClicked(this)' data-x='{{x}}' data-y='{{y}}' data-cid='-1'>
+    <td onclick='cellClicked(this)' data-x='{{x}}' data-y='{{y}}' data-sid='-1'>
       &nbsp;
     </td>
   </script>
-  <script id="colorTemplate" type="text/x-handlebars-template">
+  <script id="squareTempate" type="text/x-handlebars-template">
     <input type='radio' name='color' value='{{color}}'>
     <span style='background-color: {{color}};'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
     {{name}}
