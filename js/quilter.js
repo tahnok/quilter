@@ -36,8 +36,6 @@ cellClicked = function(that) {
   }
   x = $(that).data("x");
   y = $(that).data("y");
-  $("#x-coord").val(x);
-  $("#y-coord").val(y);
   setCell();
   findCell(x, y).css('border', '2px solid red');
 }

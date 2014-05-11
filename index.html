@@ -1,51 +1,92 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
     <meta charset="UTF-8">
     <script src="js/jquery.js" type="text/javascript"></script>
     <script src="js/handlebars.js" type="text/javascript"></script>
     <script src="js/quilter.js" type="text/javascript"></script>
     <script src="js/spectrum.js" type="text/javascript"></script>
+    <script src="js/bootstrap.js" type="text/javascript"></script>
     <link rel="stylesheet" href="css/main.css"></link>
     <link rel="stylesheet" href="css/spectrum.css"></link>
+    <link rel="stylesheet" href="css/bootstrap.min.css"></link>
   </head>
   <body>
-    <div id="cell-info" class="section">
-      <form action="#">
-        <select id="color-select">
-        </select>
-        <input type="text" id="x-coord">
-        <input type="text" id="y-coord">
-        <input type="submit" value="cell-color" onclick='setCell()'>
-      </form>
+  <div class="container">
+    <div class="page-header">
+      <h1>Quilter</h1>
     </div>
-    <div id="cell-stuff" class="section">
-    <form action="#">
-      <input type="text" id="color-name">
-      <input type="color" id="color-val">
-      <input type="submit" value="add color" onclick='addColor()'>
-    </form>
+    <div class="row">
+      <div id="cell-info" class="col-md-6">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Selected Cell</h3>
+          </div>
+          <div class="panel-body">
+            <form action="#">
+              <select id="color-select">
+              </select>
+              <input type="submit" value="cell-color" onclick='setCell()'>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div id="cell-stuff" class="col-md-6">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Add Colors</h3>
+          </div>
+          <div class="panel-body">
+            <form action="#">
+              <input type="text" id="color-name">
+              <input type="color" id="color-val">
+              <input type="submit" value="add color" onclick='addColor()'>
+            </form>
+        </div>
+        </div>
+      </div>
     </div>
-    <div id="table-container" class="section">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Quilt</h3>
+      </div>
+      <div class="panel-body">
+        <div id="table-container" class="">
+        </div>
+      </div>
     </div>
-    <div id="table-stats" class="section">
-      <p id="stats"></p>
-      <form action="#">
-        <input type="submit" value="count" onclick="countCells()">
-      </form>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Count Squares</h3>
+      </div>
+      <div class="panel-body">
+        <div id="table-stats" class="">
+          <p id="stats"></p>
+          <form action="#">
+            <input type="submit" value="count" onclick="countCells()">
+          </form>
+        </div>
+      </div>
     </div>
-    <div id="make-table" class="section">
-      <form action="#">
-        <input type="text" id="x-size">
-        <input type="text" id="y-size">
-        <input type="submit" value="Make a quilt!" onclick='makeTableButton()'>
-      </form>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Make a new quilt</h3>
+      </div>
+      <div class="panel-body">
+        <div id="make-table" class="">
+          <form action="#">
+            <input type="text" id="x-size">
+            <input type="text" id="y-size">
+            <input type="submit" value="Make a quilt!" onclick='makeTableButton()'>
+          </form>
+        </div>
+      </div>
     </div>
 
+  </div>
   </body>
 
   <script id="table" type="text/x-handlebars-template">
-    {{x}} is X. {{y}} is Y
-    <br>
     {{#table x y}}{{/table}}
   </script>
   <script id="cell" type="text/x-handlebars-template">

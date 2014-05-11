@@ -4,8 +4,7 @@ td {
   border: 1px solid black;
 }
 
-.section {
-  border: 1px grey solid;
+.row {
   padding: 14px;
   margin: 4px;
 }
