@@ -1,4 +1,15 @@
+// ------------- initialization -------------------
 jQuery(function(){
+  loadHandlebars();
+  loadColors();
+  x = -1;
+  y = -1;
+
+  registerListeners();
+  makeTable(4,4);
+});
+
+loadHandlebars = function() {
   tableTemplate = Handlebars.compile($("#table").html());
   cellTemplate = Handlebars.compile($("#cell").html());
   colorTemplate = Handlebars.compile($("#colorTemplate").html());
@@ -14,11 +25,9 @@ jQuery(function(){
     }
     return out + "</table>";
   });
+}
 
-  loadColors();
-  x = -1;
-  y = -1;
-
+registerListeners = function() {
   $("#color-select").change(function(){
     color = getColor();
     setCell();
@@ -31,8 +40,10 @@ jQuery(function(){
       x = -1;
       y = -1;
     }});
-  makeTable(4,4);
-});
+
+}
+
+// ------------- cells -------------------
 
 clearCell = function(cell) {
   cell.css('border', '1px solid black');
@@ -45,7 +56,11 @@ cellClicked = function(that) {
   x = $(that).data("x");
   y = $(that).data("y");
   setCell();
-  findCell(x, y).css('border', '2px solid red');
+  highlightCell(findCell(x, y));
+}
+
+highlightCell = function(cell) {
+  cell.css('border', '2px solid red');
 }
 
 setCell = function() {
@@ -53,19 +68,6 @@ setCell = function() {
   var color_id = findByColor(getColor());
   colorCell(cell, colors[color_id]);
   cell.data('cid', color_id);
-}
-
-findByColor = function(colorString) {
-  for(var i = 0; i < colors.length; i++) {
-    if(colors[i].color === colorString){
-      return i;
-    }
-  }
-  return -1;
-}
-
-getColor = function() {
-  return $("input[name=color]:checked", "#color-form").val();
 }
 
 colorCell = function(cell, color) {
@@ -76,15 +78,20 @@ findCell = function(x,y) {
   return $("#table-container").find("[data-x='" + x + "'][data-y='" + y + "']");
 }
 
-makeTableButton = function() {
-  var x = parseInt($("#x-size").val());
-  var y = parseInt($("#y-size").val());
-  makeTable(x, y);
-};
+// ------------- colors -------------------
 
-makeTable = function(xsize, ysize) {
-  $("#table-container").html(tableTemplate({x: xsize, y: ysize}));
-};
+getColor = function() {
+  return $("input[name=color]:checked", "#color-form").val();
+}
+
+findByColor = function(colorString) {
+  for(var i = 0; i < colors.length; i++) {
+    if(colors[i].color === colorString){
+      return i;
+    }
+  }
+  return -1;
+}
 
 addColor = function() {
   var _color = makeColor()
@@ -102,10 +109,6 @@ makeColor = function() {
   return { 'color' : color, 'name': name }
 }
 
-addColorToSelect = function(_color) {
-  $("#color-form").append(colorTemplate({color: _color.color, name: _color.name}));
-}
-
 loadColors = function() {
   var savedColors = localStorage['quilter.colors'];
   if(typeof savedColors !== 'undefined'){
@@ -119,6 +122,24 @@ loadColors = function() {
     color = -1;
   }
 }
+
+addColorToSelect = function(_color) {
+  $("#color-form").append(colorTemplate({color: _color.color, name: _color.name}));
+}
+
+// ------------- table -------------------
+
+makeTableButton = function() {
+  var x = parseInt($("#x-size").val());
+  var y = parseInt($("#y-size").val());
+  makeTable(x, y);
+};
+
+makeTable = function(xsize, ysize) {
+  $("#table-container").html(tableTemplate({x: xsize, y: ysize}));
+};
+
+// ------------- stats -------------------
 
 countCells = function() {
   var results = {}
