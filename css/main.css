@@ -8,3 +8,7 @@ td {
   padding: 14px;
   margin: 4px;
 }
+
+#color-val {
+  width: 80px;
+}

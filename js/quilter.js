@@ -1,11 +1,7 @@
 jQuery(function(){
-  colors = [];
-  x = -1;
-  y = -1;
-  color = -1;
-
   tableTemplate = Handlebars.compile($("#table").html());
   cellTemplate = Handlebars.compile($("#cell").html());
+  colorTemplate = Handlebars.compile($("#colorTemplate").html());
 
   Handlebars.registerHelper('table', function(x,y,  options) {
     var out = "<table>";
@@ -19,10 +15,22 @@ jQuery(function(){
     return out + "</table>";
   });
 
+  loadColors();
+  x = -1;
+  y = -1;
+
   $("#color-select").change(function(){
     color = getColor();
     setCell();
   });
+
+  $("body").click(function(e) {
+    var target = $(e.target);
+    if(!$("#table-container").has(target).length) {
+      clearCell(findCell(x,y));
+      x = -1;
+      y = -1;
+    }});
   makeTable(4,4);
 });
 
@@ -57,7 +65,7 @@ findByColor = function(colorString) {
 }
 
 getColor = function() {
-  return $("#color-select :selected").val();
+  return $("input[name=color]:checked", "#color-form").val();
 }
 
 colorCell = function(cell, color) {
@@ -81,10 +89,11 @@ makeTable = function(xsize, ysize) {
 addColor = function() {
   var _color = makeColor()
   colors.push(_color);
-  $("#color-select").append("<option value='" + _color.color + "'>" + _color.name + "</option>");
+  addColorToSelect(_color);
   if(color === -1){
     color = _color
   }
+  localStorage['quilter.colors'] = JSON.stringify(colors);
 }
 
 makeColor = function() {
@@ -93,6 +102,23 @@ makeColor = function() {
   return { 'color' : color, 'name': name }
 }
 
+addColorToSelect = function(_color) {
+  $("#color-form").append(colorTemplate({color: _color.color, name: _color.name}));
+}
+
+loadColors = function() {
+  var savedColors = localStorage['quilter.colors'];
+  if(typeof savedColors !== 'undefined'){
+    colors = JSON.parse(savedColors);
+    for( c in colors ) {
+      addColorToSelect(colors[c]);
+    }
+    color = colors[0];
+  } else {
+    colors = [];
+    color = -1;
+  }
+}
 
 countCells = function() {
   var results = {}
